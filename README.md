@@ -163,5 +163,32 @@ Amazon_India_Sales_Dashboard/
 - **Amazon Orange**: `#FF9900` (Call-to-Action & Accents)
 - **Amazon Blue**: `#146EB4` (Secondary Highlights & Links)
 - **Amazon Teal**: `#007185` (Informational Accents)
+- ---
+
+## 🚀 Live Dashboard
+
+The Amazon India Sales Analytics Dashboard is deployed using Streamlit Community Cloud.
+
+### 🌐 [Click Here to Open the Live Dashboard](https://amazon-india-sales-dashboard-o8ywwm7fvgoazveypkaaapp.streamlit.app/)
+
+### Dashboard Features
+
+- 📊 Overall Sales & Profit Performance
+- 📦 Category & Product Analytics
+- 🚚 Order Status & Revenue Analysis
+- 💳 Payment Method Analysis
+- 🌍 Geographic Performance Analysis
+
+### Technologies Used
+
+- Python
+- Streamlit
+- Pandas
+- Plotly
+- OpenPyXL
+
+**Deployment:** Streamlit Community Cloud
+
+**Repository:** [GitHub Source Code](https://github.com/soneeshdasari1905/amazon-india-sales-dashboard)
 - **Delivered Green**: `#067D62` (Success)
 - **Cancelled Red**: `#C40000` (Error)
