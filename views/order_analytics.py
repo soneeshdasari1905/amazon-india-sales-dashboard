@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from styles import render_header, render_kpi_card, render_section_header
+from styles import render_header, render_kpi_card, render_section_header, render_html
 from utils.formatting import format_inr, format_count, format_pct
 from utils.charts import (
     plot_order_status_distribution,
@@ -105,7 +105,7 @@ def render_order_analytics(df, total_rows):
             pill_text="Healthy" if cancellation_rate <= 5 else "Action Req."
         )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
 
     # 3. ORDER STATUS BREAKDOWN & FULFILLMENT MATRIX
     render_section_header("Order Lifecycle & Channel Diagnostics", icon="🔄")
@@ -117,7 +117,7 @@ def render_order_analytics(df, total_rows):
         st.plotly_chart(plot_fulfillment_order_status(df), use_container_width=True)
 
     # 4. CATEGORY-WISE RETURNS & CANCELLATIONS
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     render_section_header("Category-wise Returns & Cancellations", icon="📦")
 
     cat_rc_c1, cat_rc_c2 = st.columns([3, 2])
@@ -137,12 +137,11 @@ def render_order_analytics(df, total_rows):
         cat_rc['Cancel_Rate'] = (cat_rc['Cancelled'] / cat_rc['Total']) * 100
         cat_rc = cat_rc.sort_values('Return_Rate', ascending=False)
 
-        st.markdown("""
-        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; height: 380px;">
-            <div style="font-size: 14px; font-weight: 700; color: #131921; margin-bottom: 12px; border-bottom: 2px solid #EAEDED; padding-bottom: 6px;">
-                📊 Return & Cancellation Rate by Category
-            </div>
-        """, unsafe_allow_html=True)
+        render_html("""
+        <div style="font-size: 14px; font-weight: 700; color: #131921; margin-bottom: 10px; border-bottom: 2px solid #EAEDED; padding-bottom: 6px;">
+            📊 Return & Cancellation Rate by Category
+        </div>
+        """)
 
         display_rc = pd.DataFrame({
             'Category': cat_rc['Category'],
@@ -154,10 +153,9 @@ def render_order_analytics(df, total_rows):
         })
 
         st.dataframe(display_rc, use_container_width=True, hide_index=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
     # 5. FULFILLMENT EFFICIENCY BENCHMARK TABLE
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     render_section_header("Fulfillment Channel Efficiency Analysis", icon="🚚")
 
     ful_grp = df.groupby('Fulfillment').agg(

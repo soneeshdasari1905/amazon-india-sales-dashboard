@@ -3,7 +3,7 @@
 import streamlit as st
 import datetime
 from data_loader import load_and_clean_data, filter_dataset
-from styles import inject_custom_css, AMAZON_ORANGE, AMAZON_DARK_NAVY
+from styles import inject_custom_css, render_html, AMAZON_ORANGE, AMAZON_DARK_NAVY
 from views.sales_overview import render_sales_overview
 from views.product_analytics import render_product_analytics
 from views.order_analytics import render_order_analytics
@@ -32,7 +32,7 @@ def main():
 
     # 4. SIDEBAR NAVIGATION & BRANDING
     with st.sidebar:
-        st.markdown(f"""
+        render_html(f"""
         <div style="padding: 12px 4px 18px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 18px;">
             <div style="display: flex; align-items: baseline; gap: 6px;">
                 <span style="font-size: 28px; font-weight: 800; color: {AMAZON_ORANGE}; letter-spacing: -0.5px;">amazon</span>
@@ -42,9 +42,9 @@ def main():
                 Sales Analytics Dashboard
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        st.markdown("<p style='font-size: 11px; font-weight: 700; color: #A0AEC0; text-transform: uppercase; margin-bottom: 8px;'>Navigation</p>", unsafe_allow_html=True)
+        render_html("<p style='font-size: 11px; font-weight: 700; color: #A0AEC0; text-transform: uppercase; margin-bottom: 8px;'>Navigation</p>")
 
         page = st.radio(
             "Select Dashboard View:",
@@ -58,8 +58,8 @@ def main():
             label_visibility="collapsed"
         )
 
-        st.markdown("<hr style='border-color: rgba(255,255,255,0.1); margin: 20px 0 16px 0;'>", unsafe_allow_html=True)
-        st.markdown("<p style='font-size: 11px; font-weight: 700; color: #A0AEC0; text-transform: uppercase; margin-bottom: 10px;'>Global Filters</p>", unsafe_allow_html=True)
+        render_html("<hr style='border-color: rgba(255,255,255,0.1); margin: 20px 0 16px 0;'>")
+        render_html("<p style='font-size: 11px; font-weight: 700; color: #A0AEC0; text-transform: uppercase; margin-bottom: 10px;'>Global Filters</p>")
 
         # Date Range Filter
         min_date = meta['min_date'].date()
@@ -114,16 +114,16 @@ def main():
         )
 
         # Reset button
-        st.markdown("<br>", unsafe_allow_html=True)
+        render_html("<div style='height: 14px;'></div>")
         if st.button("🔄 Reset All Filters"):
             st.rerun()
 
-        st.markdown(f"""
+        render_html(f"""
         <div style="font-size: 11px; color: #718096; margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);">
             Dataset: <b>{meta['total_rows']:,} records</b><br>
             Timeline: <b>{min_date.strftime('%b %Y')} – {max_date.strftime('%b %Y')}</b>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     # 5. APPLY FILTERS TO DATASET
     filtered_df = filter_dataset(
@@ -147,11 +147,11 @@ def main():
         render_payment_and_geographic(filtered_df, meta['total_rows'])
 
     # 7. DASHBOARD FOOTER
-    st.markdown("""
+    render_html("""
     <div class="dash-footer">
         <b>Amazon India Sales Analytics Dashboard</b> &nbsp;•&nbsp; Built with Streamlit, Pandas, Plotly & OpenPyXL &nbsp;•&nbsp; Confidential & Proprietary
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 if __name__ == "__main__":

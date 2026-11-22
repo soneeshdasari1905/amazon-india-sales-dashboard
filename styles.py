@@ -1,5 +1,6 @@
 """Custom Amazon-inspired styling, CSS injection, and UI card components."""
 
+import textwrap
 import streamlit as st
 
 AMAZON_DARK_NAVY = "#131921"
@@ -12,6 +13,15 @@ AMAZON_TEXT_DARK = "#0F1111"
 AMAZON_TEXT_MUTED = "#565959"
 AMAZON_BORDER = "#D5D9D9"
 AMAZON_BG_LIGHT = "#F7F8FA"
+
+
+def render_html(html_str):
+    """Safely render HTML using st.html (Streamlit 1.35+) with fallback to dedented st.markdown."""
+    dedented = textwrap.dedent(str(html_str)).strip()
+    if hasattr(st, "html"):
+        st.html(dedented)
+    else:
+        st.markdown(dedented, unsafe_allow_html=True)
 
 
 def inject_custom_css():
@@ -139,18 +149,22 @@ def inject_custom_css():
     .amazon-badge {{
         background: {AMAZON_DARK_NAVY};
         color: #FFFFFF;
-        padding: 4px 10px;
-        border-radius: 4px;
+        padding: 6px 14px;
+        border-radius: 6px;
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.5px;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        border: 1px solid rgba(255, 153, 0, 0.4);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        white-space: nowrap;
     }}
 
     .amazon-badge span {{
         color: {AMAZON_ORANGE};
+        font-size: 10px;
     }}
 
     /* Professional KPI Card */
@@ -317,7 +331,7 @@ def inject_custom_css():
     }}
     </style>
     """
-    st.markdown(css, unsafe_allow_html=True)
+    render_html(css)
 
 
 def render_kpi_card(title, value, subtitle=None, icon="📈", variant="orange", pill_text=None):
@@ -337,22 +351,20 @@ def render_kpi_card(title, value, subtitle=None, icon="📈", variant="orange", 
     pill_html = f"<span class='pill-badge {cfg['pill']}'>{pill_text}</span>" if pill_text else ""
     subtitle_html = f"<div class='kpi-subtitle'>{pill_html} <span>{subtitle or ''}</span></div>" if (subtitle or pill_text) else ""
 
-    html = f"""
-    <div class="kpi-card">
-        <div class="kpi-top-bar" style="background: {cfg['top']};"></div>
-        <div class="kpi-card-inner">
-            <div>
-                <div class="kpi-label">{title}</div>
-                <div class="kpi-value">{value}</div>
-            </div>
-            <div class="kpi-icon-box" style="background: {cfg['bg']}; color: {cfg['icon_color']};">
-                {icon}
-            </div>
+    html = f"""<div class="kpi-card">
+    <div class="kpi-top-bar" style="background: {cfg['top']};"></div>
+    <div class="kpi-card-inner">
+        <div>
+            <div class="kpi-label">{title}</div>
+            <div class="kpi-value">{value}</div>
         </div>
-        {subtitle_html}
+        <div class="kpi-icon-box" style="background: {cfg['bg']}; color: {cfg['icon_color']};">
+            {icon}
+        </div>
     </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    {subtitle_html}
+</div>"""
+    render_html(html)
 
 
 def render_header(title, subtitle, record_count=None, total_count=None):
@@ -360,32 +372,24 @@ def render_header(title, subtitle, record_count=None, total_count=None):
     filter_info = ""
     if record_count is not None and total_count is not None:
         pct = (record_count / total_count) * 100 if total_count > 0 else 0
-        filter_info = f"""
-        <div class="amazon-badge">
-            <span>●</span> {record_count:,} / {total_count:,} orders ({pct:.0f}%)
-        </div>
-        """
+        filter_info = f'<div class="amazon-badge"><span>●</span> {record_count:,} / {total_count:,} orders ({pct:.0f}%)</div>'
 
-    html = f"""
-    <div class="dash-header">
-        <div class="dash-title-group">
-            <h1>
-                <span style="color: {AMAZON_ORANGE};">amazon</span><span style="font-size: 16px; color: {AMAZON_TEXT_MUTED}; font-weight: 500;">.in</span>
-                &nbsp;|&nbsp; {title}
-            </h1>
-            <p>{subtitle}</p>
-        </div>
-        {filter_info}
+    html = f"""<div class="dash-header">
+    <div class="dash-title-group">
+        <h1>
+            <span style="color: {AMAZON_ORANGE};">amazon</span><span style="font-size: 16px; color: {AMAZON_TEXT_MUTED}; font-weight: 500;">.in</span>
+            &nbsp;|&nbsp; {title}
+        </h1>
+        <p>{subtitle}</p>
     </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    {filter_info}
+</div>"""
+    render_html(html)
 
 
 def render_section_header(title, icon="🔹"):
     """Render a section header with Amazon orange accent."""
-    html = f"""
-    <div class="section-header">
-        <span>{icon}</span> {title}
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    html = f"""<div class="section-header">
+    <span>{icon}</span> {title}
+</div>"""
+    render_html(html)

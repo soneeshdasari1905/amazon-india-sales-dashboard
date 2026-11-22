@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from styles import render_header, render_kpi_card, render_section_header
+from styles import render_header, render_kpi_card, render_section_header, render_html
 from utils.formatting import format_inr, format_count, format_pct
 from utils.charts import plot_monthly_sales_and_profit, plot_category_sales, plot_category_profit
 
@@ -91,7 +91,7 @@ def render_sales_overview(df, total_rows):
             pill_text="Healthy" if profit_margin >= 20 else "Watch"
         )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
 
     # 3. MONTHLY SALES AND PROFIT TRENDS
     render_section_header("Monthly Sales & Profit Trajectory", icon="📊")
@@ -116,7 +116,7 @@ def render_sales_overview(df, total_rows):
             avg_monthly_sales = monthly_grp['Sales'].mean()
             avg_monthly_orders = monthly_grp['Orders'].mean()
 
-            st.markdown(f"""
+            highlights_html = f"""
             <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
                 <div style="font-size: 13px; font-weight: 700; color: #131921; margin-bottom: 12px; border-bottom: 1px solid #EAEDED; padding-bottom: 6px;">
                     ⭐ KEY SALES HIGHLIGHTS
@@ -137,7 +137,8 @@ def render_sales_overview(df, total_rows):
                     <b style="font-size: 13px; color: #131921;">{df['Order_Date'].min().strftime('%d %b %Y')} – {df['Order_Date'].max().strftime('%d %b %Y')}</b>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """
+            render_html(highlights_html)
 
     # 4. CATEGORY DISTRIBUTION COMPARISON
     render_section_header("Category Revenue & Profit Share", icon="🛍️")

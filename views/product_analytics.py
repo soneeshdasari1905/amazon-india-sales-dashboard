@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from styles import render_header, render_kpi_card, render_section_header
+from styles import render_header, render_kpi_card, render_section_header, render_html
 from utils.formatting import format_inr, format_count, format_pct
 from utils.charts import (
     plot_category_sales,
@@ -93,7 +93,7 @@ def render_product_analytics(df, total_rows):
             pill_text="Catalog"
         )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
 
     # 2. CATEGORY BREAKDOWN GRAPHS
     render_section_header("Category Performance Diagnostics", icon="📦")
@@ -109,12 +109,11 @@ def render_product_analytics(df, total_rows):
         st.plotly_chart(plot_category_units(df), use_container_width=True)
     with row2_c2:
         # Category efficiency table
-        st.markdown("""
-        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; height: 360px; overflow-y: auto;">
-            <div style="font-size: 14px; font-weight: 700; color: #131921; margin-bottom: 12px; border-bottom: 2px solid #EAEDED; padding-bottom: 6px;">
-                📋 Category Metrics Matrix
-            </div>
-        """, unsafe_allow_html=True)
+        render_html("""
+        <div style="font-size: 14px; font-weight: 700; color: #131921; margin-bottom: 10px; border-bottom: 2px solid #EAEDED; padding-bottom: 6px;">
+            📋 Category Metrics Matrix
+        </div>
+        """)
 
         cat_matrix_display = cat_summary.sort_values('Sales', ascending=False).copy()
         cat_matrix_display['Sales_Fmt'] = cat_matrix_display['Sales'].apply(lambda x: format_inr(x, compact=True))
@@ -133,15 +132,14 @@ def render_product_analytics(df, total_rows):
             use_container_width=True,
             hide_index=True
         )
-        st.markdown("</div>", unsafe_allow_html=True)
 
     # 3. TOP 10 PRODUCTS BY SALES
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     render_section_header("Top 10 Products by Sales", icon="🔥")
     st.plotly_chart(plot_top_10_products(df), use_container_width=True)
 
     # 4. CATEGORY DRILL-DOWN & FULL PRODUCT CATALOG TABLE
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     render_section_header("Catalog Performance Deep Dive", icon="🔍")
 
     selected_category = st.selectbox(

@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from styles import render_header, render_kpi_card, render_section_header
+from styles import render_header, render_kpi_card, render_section_header, render_html
 from utils.formatting import format_inr, format_count, format_pct
 from utils.charts import (
     plot_payment_method_sales_profit,
@@ -84,7 +84,7 @@ def render_payment_and_geographic(df, total_rows):
             pill_text="Coverage"
         )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
 
     # 2. STATE-WISE GEOGRAPHIC ANALYTICS
     render_section_header("State-wise Geographic Performance", icon="🗺️")
@@ -102,7 +102,7 @@ def render_payment_and_geographic(df, total_rows):
         st.plotly_chart(plot_state_orders(df), use_container_width=True)
 
     # 3. STATE PERFORMANCE SCORECARD TABLE
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     with st.expander("📊 View Complete State Performance Scorecard", expanded=False):
         state_table = state_agg.sort_values('Sales', ascending=False).copy()
         state_table['Profit_Margin_%'] = (state_table['Profit'] / state_table['Sales']) * 100
@@ -121,7 +121,7 @@ def render_payment_and_geographic(df, total_rows):
         st.dataframe(display_state_table, use_container_width=True, hide_index=True)
 
     # 4. PAYMENT & FULFILLMENT METHOD ANALYTICS
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     render_section_header("Payment & Fulfillment Method Insights", icon="💳")
 
     pay_col, ful_col = st.columns(2)
@@ -131,7 +131,7 @@ def render_payment_and_geographic(df, total_rows):
         st.plotly_chart(plot_fulfillment_sales_profit(df), use_container_width=True)
 
     # 5. DETAILED PAYMENT BREAKDOWN TABLE
-    st.markdown("<br>", unsafe_allow_html=True)
+    render_html("<div style='height: 14px;'></div>")
     pay_table_data = df.groupby('Payment_Method').agg(
         Total_Sales=('Total_Sales_INR', 'sum'),
         Total_Profit=('Profit_INR', 'sum'),
